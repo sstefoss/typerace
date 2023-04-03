@@ -19,6 +19,9 @@ defmodule TyperaceWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
+    live "/create", CreateLive, :index
+    live "/play", PlayLive, :index
+    live "/join", JoinLive, :index
   end
 
   # Other scopes may use custom stacks.
