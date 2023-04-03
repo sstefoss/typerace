@@ -21,7 +21,7 @@ defmodule TyperaceWeb do
 
   def router do
     quote do
-      use Phoenix.Router, helpers: false
+      use Phoenix.Router
 
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn
@@ -86,6 +86,8 @@ defmodule TyperaceWeb do
       # Core UI components and translation
       import TyperaceWeb.CoreComponents
       import TyperaceWeb.Gettext
+
+      alias TyperaceWeb.Router.Helpers, as: Routes
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
