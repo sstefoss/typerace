@@ -5,10 +5,11 @@ defmodule TyperaceWeb.JoinLive do
   alias Typerace.Player
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
+    code = Map.get(params, "game", "")
     {:ok,
       socket
-      |> assign(:changeset, GameStarter.insert_changeset(%{}))
+      |> assign(:changeset, GameStarter.insert_changeset(%{game_code: code}))
     }
   end
 
