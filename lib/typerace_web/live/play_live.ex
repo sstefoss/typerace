@@ -58,11 +58,37 @@ defmodule TyperaceWeb.PlayLive do
   def render(assigns) do
     IO.inspect(assigns)
     ~H"""
-      <div>
-        <%= if @player do %>
-          <%= @player.color %>
+      <%= if @server_found do %>
+        <%= if @game.status == :not_started do %>
+          <div class="mt-8 text-4xl text-gray-700 text-center">
+            Waiting for other player to join!
+          </div>
+          <div class="mt-8 text-8xl text-indigo-700 text-center font-semibold">
+            <%= @game.code %>
+          </div>
+          <p class="mt-2 text-center font-medium text-gray-500">
+            Tell a friend to use this game code to join you!
+          </p>
+        <% else %>
+          <%= if @player do %>
+            <div class="mb-4 text-lg leading-6 font-medium text-gray-900 text-center">
+              Player: <span class="font-semibold"><%= @player.name %></span>
+            </div>
+          <% end %>
         <% end %>
-      </div>
+      <% else %>
+        <div class="mt-6">
+          <p class="text-center text-4xl text-red-600">
+          Connecting to game...
+          </p>
+          <p class="mt-4 text-center font-medium">
+          Did the game you were playing already end?
+          </p>
+          <div class="mt-6 text-center">
+            <%= live_redirect("Start a new game?", to: Routes.page_path(@socket, :index), class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500") %>
+          </div>
+        </div>
+      <% end %>
     """
   end
 end
