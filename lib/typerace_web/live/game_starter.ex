@@ -2,6 +2,7 @@ defmodule TyperaceWeb.GameStarter do
   use Ecto.Schema
   import Ecto.Changeset
   alias TyperaceWeb.GameStarter
+  alias Typerace.GameServer
 
   embedded_schema do
     field :name, :string
@@ -16,7 +17,7 @@ defmodule TyperaceWeb.GameStarter do
     |> validate_length(:name, max: 15)
     |> validate_length(:game_code, is: 4)
     |> uppercase_game_code()
-    # |> validate_game_code()
+    |> validate_game_code()
     |> compute_type()
 
     changeset
@@ -38,8 +39,25 @@ defmodule TyperaceWeb.GameStarter do
 
   def get_game_code(%GameStarter{type: :join, game_code: code}), do: {:ok, code}
   def get_game_code(%GameStarter{type: :start}) do
-    #TODO: generate game code from gen server
-    {:ok, "ASDF"}
+    {:ok, GameServer.generate_game_code()}
+  end
+
+  def validate_game_code(changeset) do
+    if changeset.errors[:game_code] do
+      changeset
+    else
+      case get_field(changeset, :game_code) do
+        nil ->
+          changeset
+
+        value ->
+          if GameServer.server_found?(value) do
+            changeset
+          else
+            add_error(changeset, :game_code, "Not a running game")
+          end
+      end
+    end
   end
 
   def create(params) do
