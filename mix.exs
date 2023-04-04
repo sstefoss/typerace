@@ -48,7 +48,8 @@ defmodule Typerace.MixProject do
       {:ecto, "~> 3.9.5"},
       {:phoenix_ecto, "~> 4.4.0"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      {:horde, "~> 0.8.7"},
     ]
   end
 
