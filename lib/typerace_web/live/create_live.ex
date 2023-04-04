@@ -1,5 +1,6 @@
 defmodule TyperaceWeb.CreateLive do
   use TyperaceWeb, :live_view
+  alias Typerace.GameServer
   alias TyperaceWeb.GameStarter
   alias Typerace.Player
 
@@ -24,7 +25,8 @@ defmodule TyperaceWeb.CreateLive do
   def handle_event("submit", %{"game_starter" => params}, socket) do
     with {:ok, starter} <- GameStarter.create(params),
          {:ok, game_code} <- GameStarter.get_game_code(starter),
-         {:ok, player} <- Player.create(%{name: starter.name}) do
+         {:ok, player} <- Player.create(%{name: starter.name}),
+         {:ok, _} <- GameServer.start_or_join(game_code, player) do
         socket = push_redirect(socket,
           to: Routes.play_path(socket, :index, game: game_code, player: player.id)
         )

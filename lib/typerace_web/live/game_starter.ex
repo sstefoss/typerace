@@ -39,7 +39,7 @@ defmodule TyperaceWeb.GameStarter do
 
   def get_game_code(%GameStarter{type: :join, game_code: code}), do: {:ok, code}
   def get_game_code(%GameStarter{type: :start}) do
-    {:ok, GameServer.generate_game_code()}
+    GameServer.generate_game_code()
   end
 
   def validate_game_code(changeset) do

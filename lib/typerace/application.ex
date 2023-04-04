@@ -14,6 +14,15 @@ defmodule Typerace.Application do
       {Phoenix.PubSub, name: Typerace.PubSub},
       # Start Finch
       {Finch, name: Typerace.Finch},
+      # Start the registry for tracking running games
+      {Horde.Registry, [name: Typerace.GameRegistry, keys: :unique, members: :auto]},
+      {Horde.DynamicSupervisor,
+       [
+         name: Typerace.DistributedSupervisor,
+         shutdown: 1000,
+         strategy: :one_for_one,
+         members: :auto
+       ]},
       # Start the Endpoint (http/https)
       TyperaceWeb.Endpoint
       # Start a worker by calling: Typerace.Worker.start_link(arg)
