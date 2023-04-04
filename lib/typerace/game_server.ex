@@ -54,6 +54,15 @@ defmodule Typerace.GameServer do
     GenServer.call(via_tuple(game_code), {:join_game, player})
   end
 
+  def get_current_game_state(game_code) do
+    GenServer.call(via_tuple(game_code), :current_state)
+  end
+
+  @impl true
+  def handle_call(:current_state, _from, %GameState{} = state) do
+    {:reply, state, state}
+  end
+
   @impl true
   def handle_call({:join_game, %Player{} = player }, _from, %GameState{} = state) do
     with {:ok, new_state} <- GameState.join(state, player),

@@ -36,4 +36,8 @@ defmodule Typerace.GameState do
   end
   def start(%GameState{players: _players}), do: {:error, "Missing players"}
 
+  def get_player(%GameState{players: players} = _state, player_id) do
+    Enum.find(players, &(&1.id == player_id))
+  end
+
 end
