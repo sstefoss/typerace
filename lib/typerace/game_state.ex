@@ -40,4 +40,28 @@ defmodule Typerace.GameState do
     Enum.find(players, &(&1.id == player_id))
   end
 
+  def move_forward(%GameState{status: :playing} = state, %Player{} = player) do
+    state
+    |> player_move_forward(player)
+  end
+
+  def move_forward(%GameState{status: :not_started} = _state, %Player{} = _player) do
+    {:error, "Game hasn't started yet"}
+  end
+
+  def move_forward(%GameState{status: :done} = _state, %Player{} = _player) do
+    {:error, "Game is over"}
+  end
+
+  defp player_move_forward(%GameState{players: players} = state, %Player{id: player_id} = _player) do
+    updated_players = Enum.map(players, fn p ->
+      if (p.id == player_id) do
+        %{p | pos: p.pos + 1}
+      else p
+      end
+    end)
+    # %Player{player | pos: 10}
+    {:ok, %GameState{state | players: updated_players }}
+  end
+
 end

@@ -2,8 +2,10 @@ defmodule TyperaceWeb.PlayLive do
   use TyperaceWeb, :live_view
   alias Typerace.GameServer
   alias Typerace.GameState
+  alias Typerace.Player
   alias Phoenix.PubSub
 
+  import TyperaceWeb.GameComponents
   require Logger
 
   @impl true
@@ -41,7 +43,6 @@ defmodule TyperaceWeb.PlayLive do
     case GameServer.get_current_game_state(game_code) do
       %GameState{} = game ->
         player = GameState.get_player(game, player_id)
-        IO.inspect(player)
         {:noreply, assign(socket, game: game, player: player)}
       error ->
         Logger.error("Failed to load game server state. #{inspect(error)}")
@@ -55,8 +56,16 @@ defmodule TyperaceWeb.PlayLive do
   end
 
   @impl true
+  def handle_event("key_down", %{"key" => _key}, %{assigns: %{game: game, player: player }} = socket) do
+    with {:ok, new_state} <- GameState.move_forward(game, player) do
+      {:noreply, assign(socket, game: new_state)}
+    else
+      {:error, _} -> {:noreply, socket}
+    end
+  end
+
+  @impl true
   def render(assigns) do
-    IO.inspect(assigns)
     ~H"""
       <%= if @server_found do %>
         <%= if @game.status == :not_started do %>
@@ -73,6 +82,18 @@ defmodule TyperaceWeb.PlayLive do
           <%= if @player do %>
             <div class="mb-4 text-lg leading-6 font-medium text-gray-900 text-center">
               Player: <span class="font-semibold"><%= @player.name %></span>
+              <div id="game" phx-hook="Game" class="relative w-full h-[200px]">
+                <div><%= @player.pos %></div>
+                <.road />
+                <%= for {player, index} <- Enum.with_index(@game.players) do %>
+                  <.car
+                    id={player.id}
+                    color={player.color}
+                    x={player.pos}
+                    y={if index == 0, do: 20, else: 65}
+                  />
+                <% end %>
+              </div>
             </div>
           <% end %>
         <% end %>
