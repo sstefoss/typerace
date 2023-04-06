@@ -55,6 +55,16 @@ defmodule Typerace.GameState do
     {:error, "Game is over"}
   end
 
+  def find_player(%GameState{} = state, player_id) do
+    case get_player(state, player_id) do
+      nil ->
+        {:error, "Player not found"}
+
+      %Player{} = player ->
+        {:ok, player}
+    end
+  end
+
   defp player_move_forward(%GameState{players: players} = state, %Player{id: player_id} = _player) do
     updated_players = Enum.map(players, fn p ->
       if (p.id == player_id) do

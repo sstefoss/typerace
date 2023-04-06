@@ -32,6 +32,17 @@ defmodule TyperaceWeb.PlayLive do
   end
 
   @impl true
+  def handle_info({:game_state, %GameState{} = state} = _event, socket) do
+    IO.inspect("received game state")
+    updated_socket =
+      socket
+        |> clear_flash()
+        |> assign(:game, state)
+
+    {:noreply, updated_socket}
+  end
+
+  @impl true
   def handle_info(:load_game_state, %{assigns: %{
     server_found: true,
     game_code: game_code,
@@ -55,11 +66,13 @@ defmodule TyperaceWeb.PlayLive do
   end
 
   @impl true
-  def handle_event("key_down", %{"key" => _key}, %{assigns: %{game: game, player: player }} = socket) do
-    with {:ok, new_state} <- GameState.move_forward(game, player) do
-      {:noreply, assign(socket, game: new_state)}
-    else
-      {:error, _} -> {:noreply, socket}
+  def handle_event("key_down", %{"key" => _key}, %{assigns: %{game_code: code, player_id: player_id }} = socket) do
+    case GameServer.move_forward(code, player_id) do
+      :ok ->
+        {:noreply, socket}
+
+      {:error, _} ->
+        {:noreply, socket}
     end
   end
 

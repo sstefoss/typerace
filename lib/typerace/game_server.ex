@@ -58,6 +58,10 @@ defmodule Typerace.GameServer do
     GenServer.call(via_tuple(game_code), :current_state)
   end
 
+  def move_forward(game_code, player_id) do
+    GenServer.call(via_tuple(game_code), {:move_forward, player_id})
+  end
+
   @impl true
   def handle_call(:current_state, _from, %GameState{} = state) do
     {:reply, state, state}
@@ -73,6 +77,19 @@ defmodule Typerace.GameServer do
       {:error, reason} ->
         Logger.error("Failed to join and start game. Error: #{inspect(reason)}")
         {:reply, :error, state}
+    end
+  end
+
+  @impl true
+  def handle_call({:move_forward, player_id}, _from, %GameState{} = state) do
+    with {:ok, player} <- GameState.find_player(state, player_id),
+         {:ok, new_state} <- GameState.move_forward(state, player) do
+          broadcast_game_state(new_state)
+      {:reply, :ok, new_state}
+    else
+      {:error, reason} = error ->
+        Logger.error("Car couldn't move forward. Error: #{inspect(reason)}")
+        {:reply, error, state}
     end
   end
 
