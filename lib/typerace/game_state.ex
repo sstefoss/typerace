@@ -43,7 +43,9 @@ defmodule Typerace.GameState do
   def move_forward(%GameState{status: :playing} = state, %Player{} = player) do
     state
     |> player_move_forward(player)
+    |> check_for_done()
   end
+
 
   def move_forward(%GameState{status: :not_started} = _state, %Player{} = _player) do
     {:error, "Game hasn't started yet"}
@@ -64,4 +66,23 @@ defmodule Typerace.GameState do
     {:ok, %GameState{state | players: updated_players }}
   end
 
+  defp check_for_done({:ok, state}) do
+    case result(state) do
+      :playing ->
+        {:ok, state}
+      _ ->
+        {:ok, %GameState{state | status: :done}}
+    end
+  end
+
+  def result(%GameState{players: [p1, p2]} = _state) do
+    player_1_won = p1.pos == 100
+    player_2_won = p2.pos == 100
+
+    cond do
+      player_1_won -> p1
+      player_2_won -> p2
+      true -> :playing
+    end
+  end
 end
