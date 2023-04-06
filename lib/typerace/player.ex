@@ -7,13 +7,22 @@ defmodule Typerace.Player do
   embedded_schema do
     field :name, :string
     field :color, :string
+    field :pos, :integer
   end
 
   def insert_changeset(attrs) do
     %Player{}
-      |> cast(attrs, [:name, :color])
+      |> cast(attrs, [:name, :color, :pos])
       |> validate_required([:name])
       |> generate_id()
+      |> set_position()
+  end
+
+  def set_position(changeset) do
+    case get_field(changeset, :pos) do
+      nil -> put_change(changeset, :pos, 0)
+      _ -> changeset
+    end
   end
 
   def generate_id(changeset) do
