@@ -22,7 +22,6 @@ defmodule TyperaceWeb.Router do
     live "/create", CreateLive, :index
     live "/play", PlayLive, :index
     live "/join", JoinLive, :index
-    live "/car", CarLive, :index
   end
 
   # Other scopes may use custom stacks.
