@@ -8,9 +8,9 @@ defmodule TyperaceWeb.PlayLive do
   require Logger
 
   @impl true
-  def mount(%{"game" => game_code, "player" => player_id}, _session, socket) do
+  def mount(%{"game" => game_code, "player" => player_id} = _params, _session, socket) do
     if connected?(socket) do
-      PubSub.subscribe(Typerace.PubSub, "game#{game_code}")
+      PubSub.subscribe(Typerace.PubSub, "game:#{game_code}")
       send(self(), :load_game_state)
     end
 
