@@ -2,7 +2,6 @@ defmodule TyperaceWeb.PlayLive do
   use TyperaceWeb, :live_view
   alias Typerace.GameServer
   alias Typerace.GameState
-  alias Typerace.Player
   alias Phoenix.PubSub
 
   import TyperaceWeb.GameComponents
