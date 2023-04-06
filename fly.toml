@@ -1,0 +1,31 @@
+# fly.toml file generated for typerace on 2023-04-06T18:00:33+03:00
+
+app = "typerace"
+kill_signal = "SIGTERM"
+kill_timeout = 5
+primary_region = "otp"
+
+[deploy]
+  release_command = "/app/bin/migrate"
+
+[env]
+  PHX_HOST = "typerace.fly.dev"
+  PORT = "8080"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 1000
