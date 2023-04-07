@@ -1,5 +1,6 @@
 defmodule TyperaceWeb.GameComponents do
   use Phoenix.Component
+  require Logger
 
   def car(assigns) do
     ~H"""
@@ -19,10 +20,25 @@ defmodule TyperaceWeb.GameComponents do
   def road(assigns) do
     ~H"""
     <svg class="absolute top-0 left-0 w-full h-full" viewBox="0 0 100% 200px">
-      <rect x="0" y="0" width="100%" height="100%" fill="#00d12e" />
+      <rect x="0" y="0" width="100%" height="100%" fill="#fff" />
       <rect x="0" y="10%" width="100%" height="80%" fill="#696969" />
-      <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#fff" stroke-width="2" stroke-dasharray="5 5" />
+      <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#fff" stroke-width="4" stroke-dasharray="16 16" />
     </svg>
+    """
+  end
+
+  def environment(assigns) do
+    Logger.debug("Trees: #{inspect(assigns.trees)}")
+    ~H"""
+      <%= for tree <- @trees do %>
+        <.tree x={tree.x} width={tree.width} />
+      <% end %>
+    """
+  end
+
+  def tree(assigns) do
+    ~H"""
+      <img class="absolute z-10 top-4" style={"left: #{@x}%"} src="/images/oak.svg" width={@width} />
     """
   end
 end
