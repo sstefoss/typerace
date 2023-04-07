@@ -46,6 +46,7 @@ defmodule Typerace.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:ecto, "~> 3.9.5"},
+      {:ecto_sql, "~> 3.9.2"},
       {:phoenix_ecto, "~> 4.4.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
