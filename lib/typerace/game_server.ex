@@ -62,20 +62,37 @@ defmodule Typerace.GameServer do
     GenServer.call(via_tuple(game_code), {:move_forward, player_id})
   end
 
+  def start_game(game_code) do
+    GenServer.call(via_tuple(game_code), :start_game)
+  end
+
   @impl true
   def handle_call(:current_state, _from, %GameState{} = state) do
     {:reply, state, state}
   end
 
   @impl true
-  def handle_call({:join_game, %Player{} = player }, _from, %GameState{} = state) do
-    with {:ok, new_state} <- GameState.join(state, player),
-         {:ok, started} <- GameState.start(new_state) do
-          broadcast_game_state(started)
-          {:reply, :ok, started}
+  def handle_call(:start_game, _from, %GameState{} = state) do
+    with {:ok, started} <- GameState.start(state) do
+      broadcast_game_state(started)
+      {:reply, :ok, started}
+
     else
       {:error, reason} ->
-        Logger.error("Failed to join and start game. Error: #{inspect(reason)}")
+        Logger.error("Failed to start game. Error: #{inspect(reason)}")
+        {:reply, :error, state}
+    end
+  end
+
+  @impl true
+  def handle_call({:join_game, %Player{} = player }, _from, %GameState{} = state) do
+    with {:ok, new_state} <- GameState.join(state, player),
+         {:ok, ready} <- GameState.set_ready(new_state) do
+          broadcast_game_state(ready)
+          {:reply, :ok, ready}
+    else
+      {:error, reason} ->
+        Logger.error("Failed to join and set ready game. Error: #{inspect(reason)}")
         {:reply, :error, state}
     end
   end

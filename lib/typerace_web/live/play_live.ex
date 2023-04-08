@@ -33,7 +33,6 @@ defmodule TyperaceWeb.PlayLive do
 
   @impl true
   def handle_info({:game_state, %GameState{} = state} = _event, socket) do
-    IO.inspect("received game state")
     updated_socket =
       socket
         |> clear_flash()
@@ -77,6 +76,29 @@ defmodule TyperaceWeb.PlayLive do
   end
 
   @impl true
+  def handle_event("game_starts", _params, %{assigns: %{game_code: code}} = socket) do
+    case GameServer.start_game(code) do
+      :ok ->
+        {:noreply, socket}
+
+      {:error, _} ->
+        {:noreply, socket}
+    end
+  end
+
+  def generate_tree() do
+    %{
+      width: Enum.random(60..120),
+      x: Enum.random(10..90)
+    }
+  end
+
+  def genererate_trees() do
+    Enum.map(1..6, fn _ -> generate_tree() end)
+  end
+
+  @impl true
+  @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
       <%= if @server_found do %>
@@ -92,10 +114,21 @@ defmodule TyperaceWeb.PlayLive do
           </p>
         <% else %>
           <%= if @player do %>
-            <div class="mb-4 text-lg leading-6 font-medium text-gray-900 text-center">
-              Player: <span class="font-semibold"><%= @player.name %></span>
-              <div id="game" phx-hook="Game" class="relative w-full h-[200px]">
-                <div><%= @player.pos %></div>
+            <div>
+              <%= if @game.status == :ready do %>
+                <div id="countdown" class="absolute left-1/2 transform -translate-x-1/2 drop-shadow-lg top-[10%] z-20 font-bold text-9xl text-white" phx-hook="Countdown">
+                  <div id="timer">3</div>
+                </div>
+              <% end %>
+
+              <%= if @game.status == :playing do %>
+                <div id="game_control" phx-hook="GameControl" />
+              <% end %>
+
+              <div class="w-full relative h-[200px]">
+                <.environment trees={genererate_trees()} />
+              </div>
+              <div id="game" class="relative w-full h-[200px]">
                 <.road />
                 <%= for {player, index} <- Enum.with_index(@game.players) do %>
                   <.car
