@@ -23,6 +23,8 @@ defmodule TyperaceWeb.GameComponents do
       <rect x="0" y="0" width="100%" height="100%" fill="#fff" />
       <rect x="0" y="10%" width="100%" height="80%" fill="#696969" />
       <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#fff" stroke-width="4" stroke-dasharray="16 16" />
+      <line x1="110px" x2="110px" y1="0"  y2="100%" stroke="#fff" stroke-width="10"/>
+      <line x1="93%" x2="93%" y1="0" y2="100%" stroke="#fff" stroke-width="10"/>
     </svg>
     """
   end
