@@ -24,12 +24,13 @@ import topbar from "../vendor/topbar"
 
 let Hooks = {}
 
-Hooks.Game = {
+Hooks.GameControl = {
   mounted() {
-    const keyDownEvent = e => {
-      this.pushEvent("key_down", { key: e.key })
-    } 
-    window.addEventListener("keydown", keyDownEvent)
+    const keyDownEvent = (e) => this.pushEvent("key_down", { key: e.key })
+    window.addEventListener("keydown", keyDownEvent);
+  }
+}
+
 Hooks.Countdown = {
   mounted() {
     this.value = 3;

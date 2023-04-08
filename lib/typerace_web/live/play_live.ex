@@ -120,10 +120,15 @@ defmodule TyperaceWeb.PlayLive do
                   <div id="timer">3</div>
                 </div>
               <% end %>
+
+              <%= if @game.status == :playing do %>
+                <div id="game_control" phx-hook="GameControl" />
+              <% end %>
+
               <div class="w-full relative h-[200px]">
                 <.environment trees={genererate_trees()} />
               </div>
-              <div id="game" phx-hook="Game" class="relative w-full h-[200px]">
+              <div id="game" class="relative w-full h-[200px]">
                 <.road />
                 <%= for {player, index} <- Enum.with_index(@game.players) do %>
                   <.car
