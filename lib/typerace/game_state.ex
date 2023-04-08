@@ -30,11 +30,20 @@ defmodule Typerace.GameState do
   end
 
   def start(%GameState{status: :playing}), do: {:error, "Game has started"}
+  def start(%GameState{status: :not_started}), do: {:error, "Game is not ready"}
   def start(%GameState{status: :done}), do: {:error, "Game is done"}
-  def start(%GameState{status: :not_started, players: [_p1, _p2]} = state) do
+  def start(%GameState{status: :ready, players: [_p1, _p2]} = state) do
     {:ok, %GameState{state | status: :playing}}
   end
   def start(%GameState{players: _players}), do: {:error, "Missing players"}
+
+  def set_ready(%GameState{status: :playing}), do: {:error, "Game has started"}
+  def set_ready(%GameState{status: :ready}), do: {:error, "Game is already ready"}
+  def set_ready(%GameState{status: :done}), do: {:error, "Game is done"}
+  def set_ready(%GameState{status: :not_started, players: [_p1, _p2]} = state) do
+    {:ok, %GameState{state | status: :ready}}
+  end
+  def set_ready(%GameState{players: _players}), do: {:error, "Missing players"}
 
   def get_player(%GameState{players: players} = _state, player_id) do
     Enum.find(players, &(&1.id == player_id))

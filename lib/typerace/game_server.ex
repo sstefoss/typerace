@@ -70,7 +70,7 @@ defmodule Typerace.GameServer do
   @impl true
   def handle_call({:join_game, %Player{} = player }, _from, %GameState{} = state) do
     with {:ok, new_state} <- GameState.join(state, player),
-         {:ok, started} <- GameState.start(new_state) do
+         {:ok, started} <- GameState.set_ready(new_state) do
           broadcast_game_state(started)
           {:reply, :ok, started}
     else
