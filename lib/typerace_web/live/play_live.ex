@@ -75,6 +75,17 @@ defmodule TyperaceWeb.PlayLive do
     end
   end
 
+  @impl true
+  def handle_event("game_starts", _params, %{assigns: %{game_code: code}} = socket) do
+    case GameServer.start_game(code) do
+      :ok ->
+        {:noreply, socket}
+
+      {:error, _} ->
+        {:noreply, socket}
+    end
+  end
+
   def generate_tree() do
     %{
       width: Enum.random(60..120),
@@ -104,6 +115,11 @@ defmodule TyperaceWeb.PlayLive do
         <% else %>
           <%= if @player do %>
             <div>
+              <%= if @game.status == :ready do %>
+                <div id="countdown" class="absolute left-1/2 transform -translate-x-1/2 drop-shadow-lg top-[10%] z-20 font-bold text-9xl text-white" phx-hook="Countdown">
+                  <div id="timer">3</div>
+                </div>
+              <% end %>
               <div class="w-full relative h-[200px]">
                 <.environment trees={genererate_trees()} />
               </div>

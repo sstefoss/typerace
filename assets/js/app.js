@@ -30,6 +30,20 @@ Hooks.Game = {
       this.pushEvent("key_down", { key: e.key })
     } 
     window.addEventListener("keydown", keyDownEvent)
+Hooks.Countdown = {
+  mounted() {
+    this.value = 3;
+    this.timer = this.el.querySelector("#timer")
+    this.interval = setInterval(() => {
+      this.timer.innerHTML = this.value
+      this.value --
+
+      if (this.value < 0) {
+        clearInterval(this.interval)
+        this.timer.innerHTML = "GO!"
+        this.pushEvent("game_starts");
+      }
+    }, 1000)
   }
 }
 
