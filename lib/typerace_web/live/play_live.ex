@@ -74,8 +74,8 @@ defmodule TyperaceWeb.PlayLive do
           {:noreply, socket}
         end
 
-      {:error, _} ->
-        {:noreply, socket}
+      {:error, reason} ->
+        {:noreply, put_flash(socket, :error, reason)}
     end
   end
 
@@ -85,8 +85,19 @@ defmodule TyperaceWeb.PlayLive do
       :ok ->
         {:noreply, socket}
 
-      {:error, _} ->
+      {:error, reason} ->
+        {:noreply, put_flash(socket, :error, reason)}
+    end
+  end
+
+  @impl
+  def handle_event("restart", params, %{assigns: %{game_code: code}} = socket) do
+    case GameServer.restart(code) do
+      :ok ->
         {:noreply, socket}
+
+      {:error, reason} ->
+        {:noreply, put_flash(socket, :error, reason)}
     end
   end
 
@@ -151,6 +162,11 @@ defmodule TyperaceWeb.PlayLive do
                     is_winner={GameState.is_winner?(@game, player)}
                   />
                 <% end %>
+              </div>
+              <div :if={@game.status == :done}>
+                <.button class="block mt-4 text-center w-full rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500" phx-click="restart">
+                  Restart
+                </.button>
               </div>
             </div>
           <% end %>

@@ -66,6 +66,10 @@ defmodule Typerace.GameServer do
     GenServer.call(via_tuple(game_code), :start_game)
   end
 
+  def restart(game_code) do
+    GenServer.call(via_tuple(game_code), :restart)
+  end
+
   @impl true
   def handle_call(:current_state, _from, %GameState{} = state) do
     {:reply, state, state}
@@ -82,6 +86,19 @@ defmodule Typerace.GameServer do
         Logger.error("Failed to start game. Error: #{inspect(reason)}")
         {:reply, :error, state}
     end
+  end
+
+  @impl true
+  def handle_call(:restart, _from, %GameState{} = state) do
+    with {:ok, restarted} <- GameState.restart(state) do
+      broadcast_game_state(restarted)
+      {:reply, :ok, restarted}
+
+    else
+      {:error, reason} ->
+        Logger.error("Failed to restart game. Error #{inspect(reason)}")
+        {:relpy, :error, state}
+      end
   end
 
   @impl true

@@ -12,7 +12,7 @@ defmodule Typerace.Player do
 
   def insert_changeset(attrs) do
     %Player{}
-      |> cast(attrs, [:name, :color, :pos])
+      |> cast(attrs, [:name, :color, :pos, :id])
       |> validate_required([:name])
       |> generate_id()
       |> set_position()

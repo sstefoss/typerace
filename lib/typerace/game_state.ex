@@ -29,6 +29,15 @@ defmodule Typerace.GameState do
     {:ok, %GameState{state | players: [p1, player]}}
   end
 
+  def restart(%GameState{players: [p1, p2]} = state) do
+    with {:ok, p1_blank} <- Player.create(%{name: p1.name, color: p1.color, id: p1.id }),
+         {:ok, p2_blank} <- Player.create(%{name: p2.name, color: p2.color, id: p2.id }) do
+      {:ok, %GameState{state | status: :ready, players: [p1_blank, p2_blank]}}
+    else
+      :error -> {:error, "Could not restart game"}
+    end
+  end
+
   def start(%GameState{status: :playing}), do: {:error, "Game has started"}
   def start(%GameState{status: :not_started}), do: {:error, "Game is not ready"}
   def start(%GameState{status: :done}), do: {:error, "Game is done"}
