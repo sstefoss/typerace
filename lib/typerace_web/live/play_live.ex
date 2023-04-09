@@ -67,11 +67,15 @@ defmodule TyperaceWeb.PlayLive do
   @impl true
   def handle_event("key_down", %{"key" => _key}, %{assigns: %{game_code: code, player_id: player_id }} = socket) do
     case GameServer.move_forward(code, player_id) do
-      :ok ->
-        {:noreply, socket}
+      %GameState{} = game ->
+        if game.status == :done do
+          {:noreply, push_event(socket, "game_ends", %{game_code: code})}
+        else
+          {:noreply, socket}
+        end
 
-      {:error, _} ->
-        {:noreply, socket}
+      {:error, reason} ->
+        {:noreply, put_flash(socket, :error, reason)}
     end
   end
 
@@ -81,8 +85,19 @@ defmodule TyperaceWeb.PlayLive do
       :ok ->
         {:noreply, socket}
 
-      {:error, _} ->
+      {:error, reason} ->
+        {:noreply, put_flash(socket, :error, reason)}
+    end
+  end
+
+  @impl
+  def handle_event("restart", params, %{assigns: %{game_code: code}} = socket) do
+    case GameServer.restart(code) do
+      :ok ->
         {:noreply, socket}
+
+      {:error, reason} ->
+        {:noreply, put_flash(socket, :error, reason)}
     end
   end
 
@@ -138,6 +153,20 @@ defmodule TyperaceWeb.PlayLive do
                     y={if index == 0, do: 20, else: 65}
                   />
                 <% end %>
+              </div>
+              <div class="bg-white bg-opacity-50 py-14 px-28">
+                <%= for player <- @game.players do %>
+                  <.player
+                    name={player.name}
+                    color={player.color}
+                    is_winner={GameState.is_winner?(@game, player)}
+                  />
+                <% end %>
+              </div>
+              <div :if={@game.status == :done}>
+                <.button class="block mt-4 text-center w-full rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500" phx-click="restart">
+                  Restart
+                </.button>
               </div>
             </div>
           <% end %>
