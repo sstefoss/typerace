@@ -15,7 +15,10 @@ module.exports = {
     extend: {
       colors: {
         brand: "#FD4F00",
-      }
+      },
+      fontFamily: {
+        roboto_mono: ['RobotoMono']
+      },
     },
   },
   plugins: [

@@ -10,7 +10,7 @@ defmodule TyperaceWeb.PageLive do
   def render(assigns) do
     ~H"""
       <div>
-        <h1 class="font-bold text-center text-2xl">Welcome to TypeRace</h1>
+        <h1 class="font-bold font-roboto_mono text-center text-6xl text-white">Welcome to TypeRace</h1>
         <div class="flex flex-col justify-center items-center w-[300px] m-auto mt-10">
           <a
             class="block text-center w-full rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
