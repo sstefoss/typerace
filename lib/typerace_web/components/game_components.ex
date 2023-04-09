@@ -30,7 +30,6 @@ defmodule TyperaceWeb.GameComponents do
   end
 
   def environment(assigns) do
-    Logger.debug("Trees: #{inspect(assigns.trees)}")
     ~H"""
       <%= for tree <- @trees do %>
         <.tree x={tree.x} width={tree.width} />
@@ -41,6 +40,17 @@ defmodule TyperaceWeb.GameComponents do
   def tree(assigns) do
     ~H"""
       <img class="absolute z-10 top-4" style={"left: #{@x}%"} src="/images/oak.svg" width={@width} />
+    """
+  end
+
+  def player(assigns) do
+    ~H"""
+      <div class="flex">
+        <div class={"flex items-center font-bold text-4xl mb-10 #{if @color == "blue", do: "text-blue-700", else: "text-red-700"}"}>
+          <div><%= @name %></div>
+          <div :if={@is_winner} class="ml-4"><img src="/images/flag.png" width="48" /></div>
+        </div>
+      </div>
     """
   end
 end

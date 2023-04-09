@@ -104,4 +104,11 @@ defmodule Typerace.GameState do
       true -> :playing
     end
   end
+
+  def is_winner?(%GameState{} = game, %Player{} = player) do
+    case GameState.result(game) do
+      ^player -> true
+      _ -> false
+    end
+  end
 end

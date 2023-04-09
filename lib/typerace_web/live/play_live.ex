@@ -139,6 +139,15 @@ defmodule TyperaceWeb.PlayLive do
                   />
                 <% end %>
               </div>
+              <div class="bg-white bg-opacity-50 py-14 px-28">
+                <%= for player <- @game.players do %>
+                  <.player
+                    name={player.name}
+                    color={player.color}
+                    is_winner={GameState.is_winner?(@game, player)}
+                  />
+                <% end %>
+              </div>
             </div>
           <% end %>
         <% end %>
