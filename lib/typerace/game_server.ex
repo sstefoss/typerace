@@ -102,7 +102,7 @@ defmodule Typerace.GameServer do
     with {:ok, player} <- GameState.find_player(state, player_id),
          {:ok, new_state} <- GameState.move_forward(state, player) do
           broadcast_game_state(new_state)
-      {:reply, :ok, new_state}
+      {:reply, new_state, new_state}
     else
       {:error, reason} = error ->
         Logger.error("Car couldn't move forward. Error: #{inspect(reason)}")

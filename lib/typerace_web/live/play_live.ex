@@ -67,8 +67,12 @@ defmodule TyperaceWeb.PlayLive do
   @impl true
   def handle_event("key_down", %{"key" => _key}, %{assigns: %{game_code: code, player_id: player_id }} = socket) do
     case GameServer.move_forward(code, player_id) do
-      :ok ->
-        {:noreply, socket}
+      %GameState{} = game ->
+        if game.status == :done do
+          {:noreply, push_event(socket, "game_ends", %{game_code: code})}
+        else
+          {:noreply, socket}
+        end
 
       {:error, _} ->
         {:noreply, socket}

@@ -27,7 +27,10 @@ let Hooks = {}
 Hooks.GameControl = {
   mounted() {
     const keyDownEvent = (e) => this.pushEvent("key_down", { key: e.key })
-    window.addEventListener("keydown", keyDownEvent);
+    window.addEventListener("keydown", keyDownEvent)
+
+    const gameEnded = () => window.removeEventListener("keydown", keyDownEvent)
+    window.addEventListener("phx:game_ends", gameEnded)
   }
 }
 

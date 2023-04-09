@@ -81,7 +81,7 @@ defmodule Typerace.GameState do
       else p
       end
     end)
-    # %Player{player | pos: 10}
+
     {:ok, %GameState{state | players: updated_players }}
   end
 
