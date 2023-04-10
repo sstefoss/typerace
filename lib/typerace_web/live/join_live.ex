@@ -16,19 +16,25 @@ defmodule TyperaceWeb.JoinLive do
   @impl true
   def render(assigns) do
     ~H"""
-      <.simple_form
-        id="join-game-form"
-        for={@changeset}
-        :let={f}
-        phx-change="validate"
-        phx-submit="submit"
-      >
-        <.input field={f[:name]} label="Name" />
-        <.input field={f[:game_code]} label="Code" />
-        <.button class="block mt-4 text-center w-full rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500">
-          Join game
-        </.button>
-      </.simple_form>
+    <div class="flex items-center h-screen">
+      <div class="mx-auto text-center justify-center self-center">
+      <h1 class="font-bold text-center text-6xl text-white">Join Game</h1>
+        <.simple_form
+          id="join-game-form"
+          for={@changeset}
+          :let={f}
+          phx-change="validate"
+          phx-submit="submit"
+          class="mt-14"
+        >
+          <.input field={f[:name]} label="Player's name:" />
+          <.input field={f[:game_code]} label="Code" />
+          <.button class="block mt-4 text-center w-full rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500">
+            Join game
+          </.button>
+        </.simple_form>
+      </div>
+    </div>
     """
   end
 

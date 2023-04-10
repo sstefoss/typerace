@@ -9,21 +9,23 @@ defmodule TyperaceWeb.PageLive do
   @impl true
   def render(assigns) do
     ~H"""
-      <div>
-        <h1 class="font-bold font-roboto_mono text-center text-6xl text-white">Welcome to TypeRace</h1>
-        <div class="flex flex-col justify-center items-center w-[300px] m-auto mt-10">
-          <a
-            class="block text-center w-full rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
-            href="/create"
-          >
-            Create
-          </a>
-          <a
-            class="block mt-4 text-center w-full rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500"
-            href="/join"
-          >
-            Join existing
-          </a>
+      <div class="flex items-center h-screen">
+        <div class="mx-auto text-center justify-center self-center">
+          <h1 class="font-bold text-center text-6xl text-white">Welcome to TypeRace!</h1>
+          <div class="flex justify-center items-center w-full m-auto mt-20">
+            <a
+              class="block text-center w-full rounded text-3xl font-medium hover:font-bold text-white hover:text-white focus:outline-none focus:ring"
+              href="/create"
+            >
+              Create Game
+            </a>
+            <a
+              class="block text-center w-full rounded text-3xl font-medium hover:font-bold text-white hover:text-white focus:outline-none focus:ring"
+              href="/join"
+            >
+              Join existing
+            </a>
+          </div>
         </div>
       </div>
     """
